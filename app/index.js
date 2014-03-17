@@ -48,12 +48,12 @@ var NorthGenerator = yeoman.generators.Base.extend({
     '\n' + chalk.blue('          //      @@@@@@@\\\\     ') + chalk.cyan('  |N|\\N\\|N|  |O|   |O|  |RRRRR/      |T|      |HHHHHH|   ') +
     '\n' + chalk.blue('         //       @@@@@@@@\\\\    ') + chalk.cyan('  |N| \\NNN|  |OO`-\'OO|  |R|  \\R\\_    |T|      |H|  |H|   ') +
     '\n' + chalk.blue('         //       @@@@@@@@\\\\    ') + chalk.cyan(' |NNN| \\NN|   \\OOOOO/  |RRR| |RRR|  |TTT|    |HHH||HHH|  ') +
-    '\n' + chalk.blue('        //        @@@@@@@@@\\\\   ') +
-    '\n' + chalk.blue('       //         @@@@@@@@@@\\\\') +
-    '\n' + chalk.blue('       //       // \\\\@@@@@@@@\\\\') +
-    '\n' + chalk.blue('      //      //      \\\\@@@@@@\\\\') +
-    '\n' + chalk.blue('      //   //              \\\\@@\\\\') +
-    '\n' + chalk.blue('      //                     \\\\\\\\');
+    '\n' + chalk.blue('        //        @@@@@@@@@\\\\      ') +
+    '\n' + chalk.blue('       //         @@@@@@@@@@\\\\     ') +
+    '\n' + chalk.blue('      //        // \\\\@@@@@@@@\\\\  ') +
+    '\n' + chalk.blue('     //      //       \\\\@@@@@@\\\\ ') +
+    '\n' + chalk.blue('    //  //                 \\\\@@\\\\') +
+    '\n' + chalk.blue('    ////                     \\\\\\\\');
 
     // have Yeoman greet the user
     this.log(welcome);
