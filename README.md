@@ -1,7 +1,26 @@
-# generator-north [![Build Status](https://secure.travis-ci.org/Snugug/generator-north.png?branch=master)](https://travis-ci.org/Snugug/generator-north)
+# Generator North [![NPM version](https://badge.fury.io/js/generator-north.png)](http://badge.fury.io/js/generator-north)
 
-> [Yeoman](http://yeoman.io) generator
+```
+               /\\
+              //@\\
+             // @@\\
+            //  @@@\\
+           //   @@@@\\
+          //    @@@@@\\         ___   ___    _____    ______    _________   ___  ___
+          //    @@@@@\\        |NNN\ |NNN|  /O.-.O\  |RRRRRR\  |TTTTTTTTT| |HHH||HHH|
+         //     @@@@@@\\        |NNN\ |N|  |O|   |O|  |R|__)R| |T| |T| |T|  |H|__|H|
+        //      @@@@@@@\\       |N|\N\|N|  |O|   |O|  |RRRRR/      |T|      |HHHHHH|
+       //       @@@@@@@@\\      |N| \NNN|  |OO`-'OO|  |R|  \R\_    |T|      |H|  |H|
+       //       @@@@@@@@\\     |NNN| \NN|   \OOOOO/  |RRR| |RRR|  |TTT|    |HHH||HHH|
+      //        @@@@@@@@@\\
+     //         @@@@@@@@@@\\
+    //        // \\@@@@@@@@\\
+   //      //       \\@@@@@@\\
+  //  //                 \\@@\\
+  ////                     \\\\
+```
 
+> A [Yeoman](http://yeoman.io) generator for [North](http://pointnorth.io)
 
 ## Getting Started
 
@@ -19,6 +38,12 @@ Not every new computer comes with a Yeoman pre-installed. He lives in the [npm](
 $ npm install -g yo
 ```
 
+He also likes to bundle up his [Sassy](http://sass-lang.com/) friends. You only need to get his [packaging tape](http://bundler.io/) once, and then he'll be set. His tape lives in the [RubyGems](http://rubygems.org/) package repository.
+
+```
+$ gem install bundler
+```
+
 ### Yeoman Generators
 
 Yeoman travels light. He didn't pack any generators when he moved in. You can think of a generator like a plug-in. You get to choose what type of application you wish to create, such as a Backbone application or even a Chrome extension.
@@ -34,6 +59,28 @@ Finally, initiate the generator:
 ```
 $ yo north
 ```
+
+### Using the North generator
+
+The North generator provides a simple way to scaffold out a project following the [North](http://pointnorth.io) standards. The main generator will create a full project for you with Sass, Compass, Bundler, Bower, and JSHint set up and ready to go. You can choose to initialize a task runner, either [Grunt](http://gruntjs.com/) or [Gulp](http://gulpjs.com/), which will then come with a task for linting your JavaScript files (`grunt lint` or `gulp lint`). There are also a handful of useful options you can use when initializing the North generator (space separated):
+
+* `--init` - Initialize the current directory instead of creating a new directory
+* `--git` - Initialize your project with Git
+* `--skip-install` - Skips the installation process for Bundler, Bower, and (if needed) NPM.
+
+The North generator also provides a simple way to scaffold out the partial structure for new [Components](http://pointnorth.io/#components) or [Layouts](http://pointnorth.io/#layouts). Run either of the following commands from either the root of your project (one step below your `sass` folder) or from within your `sass` folder, replacing `{name}` with the name of your component or layout:
+
+```
+$ yo north:component {name}
+```
+
+or
+
+```
+$ yo north:layout {name}
+```
+
+You will then be guided through the steps to create a new component or layout with your given name and be given the ability to add [Aspects](http://pointnorth.io/#aspects).
 
 ### Getting To Know Yeoman
 
