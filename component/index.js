@@ -5,7 +5,7 @@ var path = require('path');
 var fs = require('fs');
 var inquirer = require("inquirer");
 var chalk = require('chalk');
-
+var _s = require('underscore.string');
 
 var workingDir = function () {
   var dir = path.basename(process.cwd()).toLowerCase();
@@ -27,7 +27,7 @@ var workingDir = function () {
         return './scss/partials/components'
       }
       else {
-        console.log('You need to call the Component Generator from within your Sass directory');
+        console.log(chalk.red('You need to call the Component Generator from the root of your Sass directory'));
         return false;
       }
       break;
@@ -110,18 +110,28 @@ var ComponentGenerator = yeoman.generators.NamedBase.extend({
     }
 
     this.prompt(name, function (props) {
-      this.name = props.name;
-      console.log(line);
+      this.name = _s.titleize(props.name);
+      this.slug = _s.slugify(props.name);
       addAspect();
     }.bind(this));
   },
 
   files: function () {
+    var dir = workingDir();
 
-    console.log(this.name);
-    console.log(this.aspects);
+    if (dir !== false) {
+      var types = {
+        'extends': 'Extendable Classes',
+        'mixins': 'Mixins',
+        'variables': 'Variable Defaults'
+      };
 
-    // this.copy('somefile.js', 'somefile.js');
+      this.template('main.scss', dir + '/_' + this.slug + '.scss');
+      for (var i in types) {
+        this.type = types[i];
+        this.template('sub.scss', dir + '/' + this.slug + '/_' + i + '.scss');
+      }
+    }
   }
 });
 
