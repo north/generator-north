@@ -9,10 +9,10 @@
   "browser": true,
 
   // Define globals exposed by jQuery.
-  "jquery": true,
+  // "jquery": true,
 
-  // Define globals exposed by Node.js.
-  "node": true,
+  // Defines globals  that are usually used for logging poor-man's debugging: `console`, `alert`, etc…
+  // "devel": true,
 
   /*
    * ENFORCING OPTIONS
@@ -54,5 +54,22 @@
   "maxlen": 80,
 
   // Enforce placing 'use strict' at the top function scope
-  "strict": true
+  "strict": true,
+
+  /*
+   * NORTH ADDITIONS
+   * =================
+   */
+
+  // Enforce curly braces around blocks in loops and conditionals
+  "curly": true,
+
+  // Prohibits the use of immediate function invocations without wrapping them in parentheses
+  "immed": true,
+
+  // Prohibits `argument.caller` and `argument.callee`
+  "noarg": true,
+
+  // Requires all `for in` loops to filter object's items
+  "forin": true
 }
