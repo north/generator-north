@@ -74,20 +74,19 @@ var NorthGenerator = yeoman.generators.Base.extend({
     }];
 
     // Optionally include a basic Gruntfile
-    if (this.options['gruntfile'] === undefined) {
-      prompts.push({
-        type: 'confirm',
-        name: 'initGrunt',
-        message: 'Would you like to include a basic Gruntfile?',
-        default: true
-      });
-    }
+    prompts.push({
+      type: 'list',
+      name: 'projectRunner',
+      message: 'What task runner would you like to use?',
+      choices: ['Grunt', 'Gulp', 'None'],
+      default: 'Grunt'
+    });
 
     this.prompt(prompts, function (props) {
       this.projectName = props.projectName;
       this.slug = _s.slugify(this.projectName);
+      this.runner = props.projectRunner;
       this.folder = this.options['init'] ? '.' : this.slug + '/';
-      this.gruntfile = this.options['gruntfile'] ? this.options['gruntfile'] : this.initGrunt;
       this.git = this.options['git'] ? this.options['git'] : this.initGit;
 
       done();
@@ -95,7 +94,6 @@ var NorthGenerator = yeoman.generators.Base.extend({
   },
 
   app: function () {
-    this.template('_package.json', this.folder + 'package.json');
     this.template('_bower.json', this.folder + 'bower.json');
     this.copy('Gemfile', this.folder + 'Gemfile');
   },
@@ -103,6 +101,27 @@ var NorthGenerator = yeoman.generators.Base.extend({
   projectfiles: function () {
     this.copy('editorconfig', this.folder + '.editorconfig');
     this.copy('jshintrc', this.folder + '.jshintrc');
+    this.copy('gitignore', this.folder + '.gitignore');
+    this.copy('config.rb', this.folder + 'config.rb');
+
+    if (this.runner !== 'None') {
+      this.copy('compass-options.js', this.folder + '.compass-options.js')
+    }
+
+    if (this.runner === 'Grunt') {
+      this.copy('Gruntfile.js', this.folder + 'Gruntfile.js');
+      this.template('_package-grunt.json', this.folder + 'package.json');
+    }
+    else if (this.runner === 'Gulp') {
+      this.copy('Gulpfile.js', this.folder + 'Gulpfile.js');
+      this.template('_package-gulp.json', this.folder + 'package.json');
+    }
+
+    var keep = ['sass', 'images', 'fonts', 'js', 'sass/partials', 'sass/partials/components', 'sass/partials/layouts', 'sass/partials/global', 'sass/enhancements', 'sass/fallbacks'];
+
+    for (var i in keep) {
+      this.copy('gitkeep', this.folder + keep[i] + '/.gitkeep');
+    }
   }
 });
 
