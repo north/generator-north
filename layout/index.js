@@ -143,8 +143,11 @@ var LayoutGenerator = yeoman.generators.NamedBase.extend({
 
       this.template('main.scss', dir + '/_' + this.slug + '.scss');
       for (var i in types) {
-        this.type = types[i];
-        this.template('sub.scss', dir + '/' + this.slug + '/_' + i + '.scss');
+        var path = dir + '/' + this.slug + '/_' + i + '.scss';
+        if (!fs.existsSync(path)) {
+          this.type = types[i];
+          this.template('sub.scss', path);
+        }
       }
     }
   }
