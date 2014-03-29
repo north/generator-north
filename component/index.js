@@ -55,7 +55,7 @@ var ComponentGenerator = yeoman.generators.NamedBase.extend({
     '\n' + chalk.blue('  //  //                 \\\\@@\\\\') +
     '\n' + chalk.blue('  ////                     \\\\\\\\');
 
-    // have Yeoman greet the user
+    // have North greet the user
     this.log(welcome);
 
     // replace it with a short and sweet description of your generator
