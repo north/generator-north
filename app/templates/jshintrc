@@ -1,7 +1,5 @@
 {
-  /**
-  * From https://github.com/airbnb/javascript/issues/105#issuecomment-28496608
-  **/
+  // From https://github.com/airbnb/javascript/blob/b65dd90ea56898a124985dabe06a895eb78dab35/linters/jshintrc
   /*
    * ENVIRONMENTS
    * =================
