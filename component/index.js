@@ -77,19 +77,17 @@ var ComponentGenerator = yeoman.generators.NamedBase.extend({
           return answers.add;
         },
         validate: function (answer) {
-          var done = this.async();
+          var cb = this.async();
 
-          setTimeout(function () {
-            if (answer === '') {
-              done("Aspect name cannot be empty");
-            }
-            else if (aspects.indexOf(answer.toUpperCase()) > -1) {
-              done("Aspect `" + answer + "` already exists!");
-            }
-            else {
-              done(true);
-            }
-          }, 1000);
+          if (answer === '') {
+            cb("Aspect name cannot be empty");
+          }
+          else if (aspects.indexOf(answer.toUpperCase()) > -1) {
+            cb("Aspect `" + answer + "` already exists!");
+          }
+          else {
+            cb(true);
+          }
 
         }
       }
@@ -98,7 +96,7 @@ var ComponentGenerator = yeoman.generators.NamedBase.extend({
     var addAspect = function () {
       _this.prompt(aspectPrompts, function(props) {
         if (props.add) {
-          aspects.push(props.aspect);
+          aspects.push(props.aspect.toUpperCase());
           console.log(line);
           addAspect();
         }
