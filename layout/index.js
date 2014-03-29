@@ -126,6 +126,23 @@ var LayoutGenerator = yeoman.generators.NamedBase.extend({
         'variables': 'Variable Defaults'
       };
 
+      // Aspect Styling
+      var aspects = '\n';
+      for (var i in this.aspects) {
+        aspects += '\n';
+        aspects += '//////////////////////////////\n';
+        aspects += '// @{' + this.slug + '--' + this.aspects[i].toLowerCase() + '}\n';
+        aspects += '// ' + _s.titleize(this.aspects[i]) + ' styling for ' + this.name + ' Layout\n';
+        aspects += '._' + this.slug + '--' + _s.slugify(this.aspects[i]).toUpperCase() + ' {\n';
+        aspects += '  \n';
+        aspects += '}\n';
+        aspects += '// {' + this.slug + '--' + this.aspects[i].toLowerCase() + '}@\n';
+        aspects += '//////////////////////////////\n';
+        aspects += '\n';
+      }
+
+      this.aspects = aspects;
+
       this.template('main.scss', dir + '/_' + this.slug + '.scss');
       for (var i in types) {
         this.type = types[i];
