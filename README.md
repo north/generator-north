@@ -68,16 +68,16 @@ The North generator provides a simple way to scaffold out a project following th
 * `--git` - Initialize your project with Git
 * `--skip-install` - Skips the installation process for Bundler, Bower, and (if needed) NPM.
 
-The North generator also provides a simple way to scaffold out the partial structure for new [Components](http://pointnorth.io/#components) or [Layouts](http://pointnorth.io/#layouts). Run either of the following commands from either the root of your project (one step below your `sass` folder) or from within your `sass` folder, replacing `{name}` with the name of your component or layout:
+The North generator also provides a simple way to scaffold out the partial structure for new [Components](http://pointnorth.io/#components) or [Layouts](http://pointnorth.io/#layouts). Run either of the following commands from either the root of your project (one step below your `sass` folder) or from within your `sass` folder:
 
 ```
-$ yo north:component {name}
+$ yo north:component
 ```
 
 or
 
 ```
-$ yo north:layout {name}
+$ yo north:layout
 ```
 
 You will then be guided through the steps to create a new component or layout with your given name and be given the ability to add [Aspects](http://pointnorth.io/#aspects).
