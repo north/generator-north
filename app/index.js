@@ -117,7 +117,16 @@ var NorthGenerator = yeoman.generators.Base.extend({
       this.template('_package-gulp.json', this.folder + 'package.json');
     }
 
-    var keep = ['sass', 'images', 'fonts', 'js', 'sass/partials', 'sass/partials/components', 'sass/partials/layouts', 'sass/partials/global', 'sass/enhancements', 'sass/fallbacks'];
+    this.template('_style.scss', this.folder + 'sass/style.scss');
+
+    var globals = ['variables', 'functions', 'mixins', 'extends'];
+
+    for (var i in globals) {
+      this.copy('all.scss', this.folder + '/sass/partials/global/_' + globals[i] + '.scss');
+      this.copy('gitkeep', this.folder + '/sass/partials/global/' + globals[i] + '/.gitkeep');
+    }
+
+    var keep = ['sass', 'images', 'fonts', 'js', 'sass/partials', 'sass/partials/components', 'sass/partials/layouts', 'sass/enhancements', 'sass/fallbacks'];
 
     for (var i in keep) {
       this.copy('gitkeep', this.folder + keep[i] + '/.gitkeep');
