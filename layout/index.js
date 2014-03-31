@@ -55,11 +55,16 @@ var LayoutGenerator = yeoman.generators.NamedBase.extend({
     '\n' + chalk.blue('  //  //                 \\\\@@\\\\') +
     '\n' + chalk.blue('  ////                     \\\\\\\\');
 
-    // have North greet the user
-    this.log(welcome);
+    if (workingDir() === false) {
+      console.log(chalk.red('You need to call the Component Generator from the root of your Sass directory'));
+    }
+    else {
+      // have North greet the user
+      this.log(welcome);
 
-    // replace it with a short and sweet description of your generator
-    this.log(chalk.magenta('\nLayout generator for North. ') + chalk.cyan('http://pointnorth.io\n'));
+      // replace it with a short and sweet description of your generator
+      this.log(chalk.magenta('\Layout generator for North. ') + chalk.cyan('http://pointnorth.io\n'));
+    }
   },
 
   askFor: function () {
@@ -130,11 +135,13 @@ var LayoutGenerator = yeoman.generators.NamedBase.extend({
       }.bind(_this));
     }
 
-    this.prompt(name, function (props) {
-      this.name = _s.titleize(props.name);
-      this.slug = _s.slugify(props.name);
-      addAspect();
-    }.bind(this));
+    if (workingDir() !== false) {
+      this.prompt(name, function (props) {
+        this.name = _s.titleize(props.name);
+        this.slug = _s.slugify(props.name);
+        addAspect();
+      }.bind(this));
+    }
   },
 
   files: function () {

@@ -27,15 +27,15 @@ var workingDir = function () {
         return './scss/partials/components'
       }
       else {
-        console.log(chalk.red('You need to call the Component Generator from the root of your Sass directory'));
         return false;
       }
       break;
   }
 }
 
-var ComponentGenerator = yeoman.generators.NamedBase.extend({
+var ComponentGenerator = yeoman.generators.Base.extend({
   init: function () {
+
     var welcome =
     '\n' + chalk.blue('               /\\\\') +
     '\n' + chalk.blue('              //@\\\\') +
@@ -55,15 +55,21 @@ var ComponentGenerator = yeoman.generators.NamedBase.extend({
     '\n' + chalk.blue('  //  //                 \\\\@@\\\\') +
     '\n' + chalk.blue('  ////                     \\\\\\\\');
 
-    // have North greet the user
-    this.log(welcome);
+    if (workingDir() === false) {
+      console.log(chalk.red('You need to call the Component Generator from the root of your Sass directory'));
+    }
+    else {
+      // have North greet the user
+      this.log(welcome);
 
-    // replace it with a short and sweet description of your generator
-    this.log(chalk.magenta('\nComponent generator for North. ') + chalk.cyan('http://pointnorth.io\n'));
+      // replace it with a short and sweet description of your generator
+      this.log(chalk.magenta('\nComponent generator for North. ') + chalk.cyan('http://pointnorth.io\n'));
+    }
   },
 
   askFor: function () {
     var done = this.async();
+
     var aspects = [];
     var _this = this;
     var line = new inquirer.Separator().line;
@@ -100,16 +106,15 @@ var ComponentGenerator = yeoman.generators.NamedBase.extend({
           return answers.add;
         },
         validate: function (answer) {
-          var cb = this.async();
 
           if (answer === '') {
-            cb("Aspect name cannot be empty");
+            return "Aspect name cannot be empty";
           }
           else if (aspects.indexOf(answer.toUpperCase()) > -1) {
-            cb("Aspect `" + answer + "` already exists!");
+            return "Aspect `" + answer + "` already exists!";
           }
           else {
-            cb(true);
+            return true;
           }
 
         }
@@ -130,11 +135,13 @@ var ComponentGenerator = yeoman.generators.NamedBase.extend({
       }.bind(_this));
     }
 
-    this.prompt(name, function (props) {
-      this.name = _s.titleize(props.name);
-      this.slug = _s.slugify(props.name);
-      addAspect();
-    }.bind(this));
+    if (workingDir() !== false) {
+      this.prompt(name, function (props) {
+        this.name = _s.titleize(props.name);
+        this.slug = _s.slugify(props.name);
+        addAspect();
+      }.bind(this));
+    }
   },
 
   files: function () {
