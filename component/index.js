@@ -73,7 +73,7 @@ var ComponentGenerator = yeoman.generators.NamedBase.extend({
         type: 'string',
         name: 'name',
         message: 'Component Name',
-        default: this.name,
+        default: this.args.join(' '),
         validate: function (answer) {
           if (answer === '') {
             return "Component name cannot be empty";

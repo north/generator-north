@@ -73,7 +73,7 @@ var LayoutGenerator = yeoman.generators.NamedBase.extend({
         type: 'string',
         name: 'name',
         message: 'Layout Name',
-        default: this.name,
+        default: this.args.join(' '),
         validate: function (answer) {
           if (answer === '') {
             return "Layout name cannot be empty";
