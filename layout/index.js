@@ -34,7 +34,7 @@ var workingDir = function () {
   }
 }
 
-var LayoutGenerator = yeoman.generators.NamedBase.extend({
+var LayoutGenerator = yeoman.generators.Base.extend({
   init: function () {
     var welcome =
     '\n' + chalk.blue('               /\\\\') +
