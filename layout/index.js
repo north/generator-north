@@ -1,61 +1,18 @@
 'use strict';
 var util = require('util');
 var yeoman = require('yeoman-generator');
-var path = require('path');
 var fs = require('fs');
 var inquirer = require("inquirer");
 var chalk = require('chalk');
 var _s = require('underscore.string');
+var shared = require('../shared');
 
-var workingDir = function () {
-  var dir = path.basename(process.cwd()).toLowerCase();
-  switch (dir) {
-    case 'layouts':
-      return '.'
-    case 'components':
-      return '../layouts'
-    case 'partials':
-      return './layouts'
-    case 'sass':
-    case 'scss':
-      return './partials/layouts'
-    default:
-      if (fs.existsSync('sass')) {
-        return './sass/partials/layouts'
-      }
-      else if (fs.existsSync('scss')) {
-        return './scss/partials/layouts'
-      }
-      else {
-        console.log(chalk.red('You need to call the Layout Generator from the root of your Sass directory'));
-        return false;
-      }
-      break;
-  }
-}
 
 var LayoutGenerator = yeoman.generators.Base.extend({
   init: function () {
-    var welcome =
-    '\n' + chalk.blue('               /\\\\') +
-    '\n' + chalk.blue('              //@\\\\') +
-    '\n' + chalk.blue('             // @@\\\\') +
-    '\n' + chalk.blue('            //  @@@\\\\') +
-    '\n' + chalk.blue('           //   @@@@\\\\') +
-    '\n' + chalk.blue('          //    @@@@@\\\\        ') + chalk.cyan(' ___   ___    _____    ______    _________   ___  ___   ') +
-    '\n' + chalk.blue('          //    @@@@@\\\\        ') + chalk.cyan('|NNN\\ |NNN|  /O.-.O\\  |RRRRRR\\  |TTTTTTTTT| |HHH||HHH|  ') +
-    '\n' + chalk.blue('         //     @@@@@@\\\\       ') + chalk.cyan(' |NNN\\ |N|  |O|   |O|  |R|__)R| |T| |T| |T|  |H|__|H|   ') +
-    '\n' + chalk.blue('        //      @@@@@@@\\\\      ') + chalk.cyan(' |N|\\N\\|N|  |O|   |O|  |RRRRR/      |T|      |HHHHHH|   ') +
-    '\n' + chalk.blue('       //       @@@@@@@@\\\\     ') + chalk.cyan(' |N| \\NNN|  |OO`-\'OO|  |R|  \\R\\_    |T|      |H|  |H|   ') +
-    '\n' + chalk.blue('       //       @@@@@@@@\\\\     ') + chalk.cyan('|NNN| \\NN|   \\OOOOO/  |RRR| |RRR|  |TTT|    |HHH||HHH|  ') +
-    '\n' + chalk.blue('      //        @@@@@@@@@\\\\      ') +
-    '\n' + chalk.blue('     //         @@@@@@@@@@\\\\     ') +
-    '\n' + chalk.blue('    //        // \\\\@@@@@@@@\\\\  ') +
-    '\n' + chalk.blue('   //      //       \\\\@@@@@@\\\\ ') +
-    '\n' + chalk.blue('  //  //                 \\\\@@\\\\') +
-    '\n' + chalk.blue('  ////                     \\\\\\\\');
+    var welcome = shared.welcome();
 
-    if (workingDir() === false) {
+    if (shared.workingDir() === false) {
       console.log(chalk.red('You need to call the Component Generator from the root of your Sass directory'));
     }
     else {
@@ -135,7 +92,7 @@ var LayoutGenerator = yeoman.generators.Base.extend({
       }.bind(_this));
     }
 
-    if (workingDir() !== false) {
+    if (shared.workingDir() !== false) {
       this.prompt(name, function (props) {
         this.name = _s.titleize(props.name);
         this.slug = _s.slugify(props.name);
@@ -145,7 +102,7 @@ var LayoutGenerator = yeoman.generators.Base.extend({
   },
 
   files: function () {
-    var dir = workingDir();
+    var dir = shared.workingDir();
 
     if (dir !== false) {
       var types = {
