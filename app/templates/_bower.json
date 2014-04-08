@@ -1,5 +1,5 @@
 {
-  "name": "<%= projectName %>",
+  "name": "<%= slug %>",
   "version": "0.0.0",
   "ignore": [
     "**/.*",
