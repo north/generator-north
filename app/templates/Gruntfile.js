@@ -5,6 +5,9 @@ module.exports = function (grunt) {
   <% if (server) { %>var dirs = require('compass-options').dirs();<% } %>
 
   grunt.initConfig({
+    //////////////////////////////
+    // JS Hint Options
+    //////////////////////////////
     jshint: {
       options: {
         jshintrc: '.jshintrc'
@@ -14,6 +17,9 @@ module.exports = function (grunt) {
         '!' + paths.js + '/{,**/}*.min.js'
       ]
     }<% if (server) { %>,
+    //////////////////////////////
+    // Compass Options
+    //////////////////////////////
     compass: {
       dist: {
         options: {
@@ -22,6 +28,9 @@ module.exports = function (grunt) {
         }
       }
     },
+    //////////////////////////////
+    // Watch Options
+    //////////////////////////////
     watch: {
       scripts: {
         files: paths.js + '/{,**/}*.js',
@@ -32,6 +41,9 @@ module.exports = function (grunt) {
         tasks: ['compass']
       }
     },
+    //////////////////////////////
+    // BrowserSync Options
+    //////////////////////////////
     browserSync: {
       dev: {
         bsFiles: {
@@ -54,10 +66,19 @@ module.exports = function (grunt) {
     <% } %>
   });
 
+  //////////////////////////////
+  // Load all Grunt tasks
+  //////////////////////////////
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
+  //////////////////////////////
+  // Lint Task
+  //////////////////////////////
   grunt.registerTask('lint', ['jshint']);
-
-  <% if (server) { %>grunt.registerTask('server', ['browserSync', 'watch']);
+  <% if (server) { %>
+  //////////////////////////////
+  // Server Tasks
+  //////////////////////////////
+  grunt.registerTask('server', ['browserSync', 'watch']);
   grunt.registerTask('serve', ['server']);<% } %>
 }
