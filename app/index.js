@@ -58,18 +58,35 @@ var NorthGenerator = yeoman.generators.Base.extend({
     }];
 
     // Optionally include a basic Gruntfile
-    prompts.push({
-      type: 'list',
-      name: 'projectRunner',
-      message: 'What task runner would you like to use?',
-      choices: ['Grunt', 'Gulp', 'None'],
-      default: 'Grunt'
-    });
+    prompts.push(
+      {
+        type: 'list',
+        name: 'projectRunner',
+        message: 'What task runner would you like to use?',
+        choices: ['Grunt', 'Gulp', 'None'],
+        default: 'Grunt'
+      },
+      {
+        type: 'confirm',
+        name: 'server',
+        message: 'Include server and watch tasks?',
+        when: function (answers) {
+          if (answers.projectRunner.toLowerCase() === 'none') {
+            return false;
+          }
+          else {
+            return true;
+          }
+        },
+        default: true
+      }
+    );
 
     this.prompt(prompts, function (props) {
       this.projectName = props.projectName;
       this.slug = _s.slugify(this.projectName);
       this.runner = props.projectRunner;
+      this.server = props.server;
       this.folder = this.options['init'] ? '.' : this.slug + '/';
       this.git = this.options['git'] ? this.options['git'] : this.initGit;
 
@@ -88,10 +105,6 @@ var NorthGenerator = yeoman.generators.Base.extend({
     this.copy('gitignore', this.folder + '.gitignore');
     this.copy('config.rb', this.folder + 'config.rb');
 
-    if (this.runner !== 'None') {
-      this.copy('compass-options.js', this.folder + '.compass-options.js')
-    }
-
     if (this.runner === 'Grunt') {
       this.copy('Gruntfile.js', this.folder + 'Gruntfile.js');
       this.template('_package-grunt.json', this.folder + 'package.json');
@@ -99,6 +112,10 @@ var NorthGenerator = yeoman.generators.Base.extend({
     else if (this.runner === 'Gulp') {
       this.copy('Gulpfile.js', this.folder + 'Gulpfile.js');
       this.template('_package-gulp.json', this.folder + 'package.json');
+    }
+
+    if (this.server) {
+      this.template('index.html', this.folder + 'index.html');
     }
 
     this.template('_style.scss', this.folder + 'sass/style.scss');
