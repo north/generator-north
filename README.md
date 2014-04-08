@@ -62,7 +62,7 @@ $ yo north
 
 ### Using the North generator
 
-The North generator provides a simple way to scaffold out a project following the [North](http://pointnorth.io) standards. The main generator will create a full project for you with Sass, Compass, Bundler, Bower, and JSHint set up and ready to go. You can choose to initialize a task runner, either [Grunt](http://gruntjs.com/) or [Gulp](http://gulpjs.com/), which will then come with a task for linting your JavaScript files (`grunt lint` or `gulp lint`). There are also a handful of useful options you can use when initializing the North generator (space separated):
+The North generator provides a simple way to scaffold out a project following the [North](http://pointnorth.io) standards. The main generator will create a full project for you with Sass, Compass, Bundler, Bower, and JSHint set up and ready to go. You can choose to initialize a task runner, either [Grunt](http://gruntjs.com/) or [Gulp](http://gulpjs.com/), which will then come with a task for linting your JavaScript files (`grunt lint` or `gulp lint`). If you choose, you can also initialize your task runner of choice with a [BrowserSync](http://browsersync.io/) based static file server with code sync (live reloading), Compass watch/compile, and JavaScript watch/lint set up. There are also a handful of useful options you can use when initializing the North generator (space separated):
 
 * `--init` - Initialize the current directory instead of creating a new directory
 * `--git` - Initialize your project with Git
