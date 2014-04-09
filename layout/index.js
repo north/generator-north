@@ -5,7 +5,7 @@ var fs = require('fs');
 var inquirer = require("inquirer");
 var chalk = require('chalk');
 var _s = require('underscore.string');
-var shared = require('../shared');
+var shared = require('../shared.js');
 
 
 var LayoutGenerator = yeoman.generators.Base.extend({

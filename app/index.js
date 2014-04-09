@@ -5,7 +5,7 @@ var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var _s = require('underscore.string');
 var sh = require('execSync');
-var shared = require('../shared');
+var shared = require('../shared.js');
 
 
 var NorthGenerator = yeoman.generators.Base.extend({
