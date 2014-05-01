@@ -19,7 +19,7 @@ var NorthGenerator = yeoman.generators.Base.extend({
       // If the --init flag isn't passed in, move into project dir
       //////////////////////////////
       if (!this.options['init']) {
-        process.chdir(this.projectFolder);
+        process.chdir(this.folder);
       }
 
       //////////////////////////////
