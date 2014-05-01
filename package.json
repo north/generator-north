@@ -4,7 +4,7 @@
   "description": "Yeoman generator",
   "license": "MIT",
   "main": "app/index.js",
-  "repository": "Snugug/generator-north",
+  "repository": "north/generator-north",
   "author": {
     "name": "",
     "email": "",
@@ -27,8 +27,10 @@
   ],
   "dependencies": {
     "yeoman-generator": "~0.16.0",
+    "lodash": "~1.3.1",
+    "validator": "~1.1.3",
+    "underscore.string": "~2.3",
     "chalk": "~0.4.0",
-    "underscore.string": "~2.3.3",
     "execSync": "~1.0.1-pre",
     "inquirer": "^0.4.1"
   },
