@@ -15,21 +15,27 @@ var NorthGenerator = yeoman.generators.Base.extend({
 
 
     this.on('end', function () {
+      //////////////////////////////
+      // If the --init flag isn't passed in, move into project dir
+      //////////////////////////////
+      if (!this.options['init']) {
+        process.chdir(this.projectFolder);
+      }
+
+      //////////////////////////////
+      // Install dependencies unless --skip-install is passed
+      //////////////////////////////
       if (!this.options['skip-install']) {
-        if (!this.options['init']) {
-          process.chdir(this.folder);
-        }
         sh.run('bundle install --path vendor');
         this.installDependencies();
       }
 
-      this.log(chalk.magenta('Git: ' + this.git));
-
+      //////////////////////////////
+      // If the --git flag is passed, initialize git and add for initial commit
+      //////////////////////////////
       if (this.options['git']) {
-        if (!this.options['init']) {
-          process.chdir(this.folder);
-        }
         sh.run('git init');
+        sh.run('git add . && git commit -m "North Generation"');
       }
     });
   },
@@ -87,7 +93,7 @@ var NorthGenerator = yeoman.generators.Base.extend({
       this.slug = _s.slugify(this.projectName);
       this.runner = props.projectRunner;
       this.server = props.server;
-      this.folder = this.options['init'] ? '.' : this.slug + '/';
+      this.folder = this.options['init'] ? './' : this.slug + '/';
       this.git = this.options['git'] ? this.options['git'] : this.initGit;
 
       done();
@@ -123,8 +129,8 @@ var NorthGenerator = yeoman.generators.Base.extend({
     var globals = ['variables', 'functions', 'mixins', 'extends'];
 
     for (var i in globals) {
-      this.copy('all.scss', this.folder + '/sass/partials/global/_' + globals[i] + '.scss');
-      this.copy('gitkeep', this.folder + '/sass/partials/global/' + globals[i] + '/.gitkeep');
+      this.copy('all.scss', this.folder + 'sass/partials/global/_' + globals[i] + '.scss');
+      this.copy('gitkeep', this.folder + 'sass/partials/global/' + globals[i] + '/.gitkeep');
     }
 
     var keep = ['sass', 'images', 'fonts', 'js', 'sass/partials', 'sass/partials/components', 'sass/partials/layouts', 'sass/enhancements', 'sass/fallbacks'];
