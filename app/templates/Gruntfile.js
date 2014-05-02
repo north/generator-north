@@ -79,6 +79,6 @@ module.exports = function (grunt) {
   //////////////////////////////
   // Server Tasks
   //////////////////////////////
-  grunt.registerTask('server', ['browserSync', 'watch']);
+  grunt.registerTask('server', ['watch', 'compass', 'browserSync']);
   grunt.registerTask('serve', ['server']);<% } %>
 }
