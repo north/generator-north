@@ -2,24 +2,34 @@ var fs = require('fs');
 var chalk = require('chalk');
 var path = require('path');
 
-module.exports.workingDir = function () {
+module.exports.workingDir = function (base) {
   var dir = path.basename(process.cwd()).toLowerCase();
   switch (dir) {
     case 'components':
-      return '.'
+      if (base === 'components') {
+        return '.';
+      }
+      else if (base === 'layouts') {
+        return '../' + base;
+      }
     case 'layouts':
-      return '../components'
+      if (base === 'components') {
+        return '../' + base;
+      }
+      else if (base === 'layouts') {
+        return '.';
+      }
     case 'partials':
-      return './components'
+      return './' + base;
     case 'sass':
     case 'scss':
-      return './partials/components'
+      return './partials/' + base;
     default:
       if (fs.existsSync('sass')) {
-        return './sass/partials/components'
+        return './sass/partials/' + base;
       }
       else if (fs.existsSync('scss')) {
-        return './scss/partials/components'
+        return './scss/partials/' + base;
       }
       else {
         return false;

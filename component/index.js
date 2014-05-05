@@ -11,7 +11,7 @@ var ComponentGenerator = yeoman.generators.Base.extend({
   init: function () {
     var welcome = shared.welcome();
 
-    if (shared.workingDir() === false) {
+    if (shared.workingDir('components') === false) {
       console.log(chalk.red('You need to call the Component Generator from the root of your Sass directory'));
     }
     else {
@@ -91,7 +91,7 @@ var ComponentGenerator = yeoman.generators.Base.extend({
       }.bind(_this));
     }
 
-    if (shared.workingDir() !== false) {
+    if (shared.workingDir('components') !== false) {
       this.prompt(name, function (props) {
         this.name = _s.titleize(props.name);
         this.slug = _s.slugify(props.name);
@@ -101,7 +101,7 @@ var ComponentGenerator = yeoman.generators.Base.extend({
   },
 
   files: function () {
-    var dir = shared.workingDir();
+    var dir = shared.workingDir('components');
 
     if (dir !== false) {
       var types = {

@@ -12,7 +12,7 @@ var LayoutGenerator = yeoman.generators.Base.extend({
   init: function () {
     var welcome = shared.welcome();
 
-    if (shared.workingDir() === false) {
+    if (shared.workingDir('layouts') === false) {
       console.log(chalk.red('You need to call the Component Generator from the root of your Sass directory'));
     }
     else {
@@ -92,7 +92,7 @@ var LayoutGenerator = yeoman.generators.Base.extend({
       }.bind(_this));
     }
 
-    if (shared.workingDir() !== false) {
+    if (shared.workingDir('layouts') !== false) {
       this.prompt(name, function (props) {
         this.name = _s.titleize(props.name);
         this.slug = _s.slugify(props.name);
@@ -102,7 +102,7 @@ var LayoutGenerator = yeoman.generators.Base.extend({
   },
 
   files: function () {
-    var dir = shared.workingDir();
+    var dir = shared.workingDir('layouts');
 
     if (dir !== false) {
       var types = {
