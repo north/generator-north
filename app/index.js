@@ -26,8 +26,17 @@ var NorthGenerator = yeoman.generators.Base.extend({
       // Install dependencies unless --skip-install is passed
       //////////////////////////////
       if (!this.options['skip-install']) {
+        var bower = true;
+        var npm = this.projectRunner !== 'None' ? true : false;
+
         sh.run('bundle install --path vendor');
-        this.installDependencies();
+
+        if (bower || npm) {
+          this.installDependencies({
+            bower: bower,
+            npm: npm
+          });
+        }
       }
 
       //////////////////////////////
