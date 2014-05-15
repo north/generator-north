@@ -27,7 +27,7 @@ var NorthGenerator = yeoman.generators.Base.extend({
       //////////////////////////////
       if (!this.options['skip-install']) {
         var bower = true;
-        var npm = this.projectRunner.indexOf('None') !== -1 ? true : false;
+        var npm = this.runner.indexOf('None') !== -1 ? false : true;
 
         sh.run('bundle install --path vendor');
 
