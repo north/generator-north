@@ -1,7 +1,7 @@
 'use strict';
 var util = require('util');
 var yeoman = require('yeoman-generator');
-var fs = require('fs');
+var fs = require('fs-extra');
 var inquirer = require("inquirer");
 var chalk = require('chalk');
 var _s = require('underscore.string');
@@ -20,6 +20,7 @@ var ComponentGenerator = yeoman.generators.Base.extend({
 
       // replace it with a short and sweet description of your generator
       this.log(chalk.magenta('\nComponent generator for North. ') + chalk.cyan('http://pointnorth.io\n'));
+      this.patterns = shared.patterns(shared.workingDir('components'));
     }
   },
 
@@ -39,6 +40,9 @@ var ComponentGenerator = yeoman.generators.Base.extend({
         validate: function (answer) {
           if (answer === '') {
             return "Component name cannot be empty";
+          }
+          else if (_this.patterns.indexOf(_s.slugify(answer)) !== -1) {
+            return "Component " + chalk.red(answer) + " already exists";
           }
           else {
             return true;
@@ -136,6 +140,16 @@ var ComponentGenerator = yeoman.generators.Base.extend({
         }
       }
     }
+  },
+
+  import: function () {
+    var dir = shared.workingDir('components');
+
+    if (dir !== false) {
+      var sass = shared.sassDir(dir);
+      shared.import('components', this.slug, sass);
+    }
+
   }
 });
 

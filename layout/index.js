@@ -21,6 +21,7 @@ var LayoutGenerator = yeoman.generators.Base.extend({
 
       // replace it with a short and sweet description of your generator
       this.log(chalk.magenta('\Layout generator for North. ') + chalk.cyan('http://pointnorth.io\n'));
+      this.patterns = shared.patterns(shared.workingDir('layouts'));
     }
   },
 
@@ -39,6 +40,9 @@ var LayoutGenerator = yeoman.generators.Base.extend({
         validate: function (answer) {
           if (answer === '') {
             return "Layout name cannot be empty";
+          }
+          else if (_this.patterns.indexOf(_s.slugify(answer)) !== -1) {
+            return "Layout " + chalk.red(answer) + " already exists";
           }
           else {
             return true;
@@ -136,6 +140,15 @@ var LayoutGenerator = yeoman.generators.Base.extend({
           this.template('sub.scss', path);
         }
       }
+    }
+  },
+
+  import: function () {
+    var dir = shared.workingDir('layouts');
+
+    if (dir !== false) {
+      var sass = shared.sassDir(dir);
+      shared.import('layouts', this.slug, sass);
     }
   }
 });

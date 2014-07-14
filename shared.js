@@ -1,6 +1,8 @@
 var fs = require('fs');
 var chalk = require('chalk');
 var path = require('path');
+var StringDecoder = require('string_decoder').StringDecoder;
+var decoder = new StringDecoder('utf8');
 
 module.exports.workingDir = function (base) {
   var dir = path.basename(process.cwd()).toLowerCase();
@@ -38,6 +40,27 @@ module.exports.workingDir = function (base) {
   }
 }
 
+module.exports.sassDir = function (base) {
+  var path = base.split('/');
+  if (path[0] === '..') {
+    return '../../';
+  }
+  else if (path[0] === '.') {
+    if (path.length === 2) {
+      return '../';
+    }
+    else if (path.length === 3) {
+      return './';
+    }
+    else if (path.length === 4) {
+      return './sass/';
+    }
+    else {
+      return '../../';
+    }
+  }
+}
+
 module.exports.welcome = function () {
   var welcome =
     '\n' + chalk.blue('               /\\\\') +
@@ -58,4 +81,54 @@ module.exports.welcome = function () {
     '\n' + chalk.blue('  //  //                 \\\\@@\\\\') +
     '\n' + chalk.blue('  ////                     \\\\\\\\');
   return welcome;
+}
+
+module.exports.import = function (section, pattern, dir) {
+  var files = fs.readdirSync(dir);
+  var imported = false;
+  files.forEach(function (k, v) {
+    var extension = k.split('.').pop();
+    if (extension === 'scss' || extension === 'sass') {
+      var content = decoder.write(fs.readFileSync(dir + k));
+      var startSearch = '//////////////////////////////\n// ' + section.toUpperCase();
+      var start = content.indexOf(startSearch);
+      if (start >= 0) {
+        var end = content.indexOf('//////////////////////////////', start + startSearch.length);
+
+        var importString = '@import "partials/' + section + '/' + pattern + '"';
+        if (extension === 'scss') {
+          importString += ';';
+        }
+        importString += '\n';
+
+        var output = [content.slice(0, end), importString, content.slice(end)].join('');
+
+
+        fs.writeFileSync(dir + k, output);
+        console.log('Updated ' + chalk.magenta(dir + k));
+        imported = true;
+      }
+    }
+  });
+
+  if (!imported) {
+    console.log('Now import ' + chalk.magenta('partials/' + section + '/' + pattern) + ' into your Sass file');
+  }
+}
+
+module.exports.patterns = function (rootDir) {
+  var dirs, file, filePath, files, stat, _i, _len;
+  files = fs.readdirSync(rootDir);
+  dirs = [];
+  for (_i = 0, _len = files.length; _i < _len; _i++) {
+    file = files[_i];
+    if (file[0] !== '.') {
+      filePath = "" + rootDir + "/" + file;
+      stat = fs.statSync(filePath);
+      if (stat.isDirectory()) {
+        dirs.push(file);
+      }
+    }
+  }
+  return dirs;
 }

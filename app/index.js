@@ -142,7 +142,7 @@ var NorthGenerator = yeoman.generators.Base.extend({
       this.copy('gitkeep', this.folder + 'sass/partials/global/' + globals[i] + '/.gitkeep');
     }
 
-    var keep = ['sass', 'images', 'fonts', 'js', 'sass/partials', 'sass/partials/components', 'sass/partials/layouts', 'sass/enhancements', 'sass/fallbacks'];
+    var keep = ['sass', 'images', 'fonts', 'js', 'sass/partials', 'sass/partials/components', 'sass/partials/layouts'];
 
     for (var i in keep) {
       this.copy('gitkeep', this.folder + keep[i] + '/.gitkeep');
