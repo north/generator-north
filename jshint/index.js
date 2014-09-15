@@ -8,28 +8,17 @@ var util = require('util'),
 
 var NorthGenerator = yeoman.generators.Base.extend({
   init: function () {
-    var config,
-        i;
-
     if (fs.existsSync('package.json')) {
       this.pkg = fs.readJsonSync('package.json');
     }
 
+    // Set the runner from config or options
     if (this.config.get('runner')) {
       this.runner = this.config.get('runner');
     }
-    else {
-      if (fs.existsSync('.yo-rc.json')) {
-        config = fs.readJsonSync('.yo-rc.json');
-        for (var i in config) {
-          if (config[i].runner) {
-            this.runner = config[i].runner;
-            break;
-          }
-        }
-      }
+    else if (this.options.runner) {
+      this.runner = this.options.runner;
     }
-
   },
 
   prompts: function () {
@@ -47,6 +36,7 @@ var NorthGenerator = yeoman.generators.Base.extend({
       });
 
       this.prompt(prompts, function (props) {
+        this.runner = props.projectRunner;
         this.config.set('runner', props.projectRunner);
         done();
       }.bind(this));
