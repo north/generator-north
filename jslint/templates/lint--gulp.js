@@ -18,10 +18,12 @@ var toLint = [
 ];
 
 module.exports = function (gulp, lintPaths) {
-  lintPaths = lintPaths || toLint;
+  gulp.task('jslint', function () {
+    lintPaths = lintPaths || toLint;
 
-  return gulp.src(lintPaths)
-    .pipe(jshint())
-    .pipe(jshint.reporter(stylish))
-    .pipe(reload({stream: true}));
+    return gulp.src(lintPaths)
+      .pipe(jshint())
+      .pipe(jshint.reporter(stylish))
+      .pipe(reload({stream: true}));
+  });
 }

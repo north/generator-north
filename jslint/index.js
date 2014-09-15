@@ -2,6 +2,7 @@
 var util = require('util'),
     chalk = require('chalk'),
     yeoman = require('yeoman-generator'),
+    shared = require('../shared.js'),
     fs = require('fs-extra');
 
 
@@ -40,7 +41,9 @@ var NorthGenerator = yeoman.generators.Base.extend({
     var runner = this.config.get('runner'),
         taskExists = false,
         runnerExists = true,
+        pkgExists = true,
         pkgUpdate = false,
+        pkgFile,
         deps,
         depKeys,
         runnerFile;
@@ -55,8 +58,6 @@ var NorthGenerator = yeoman.generators.Base.extend({
     //////////////////////////////
     if (runner && !fs.existsSync(runner + 'file.js')) {
       runnerExists = false;
-      this.server = false;
-      this.slug = 'project';
 
       runnerFile = '\'use strict\';\n\n' +
         'var gulp = require(\'gulp\'),\n' +
@@ -65,22 +66,32 @@ var NorthGenerator = yeoman.generators.Base.extend({
       fs.outputFileSync(runner + 'file.js', runnerFile);
     }
 
+    //////////////////////////////
+    // Check to see if package exists, and if it doesn't create it
+    //////////////////////////////
+    if (runner && !fs.existsSync('package.json')) {
+      pkgExists = false;
+      this.pkg = shared.pkg(runner);
+
+      fs.outputJsonSync('package.json', this.pkg);
+    }
+
+    //////////////////////////////
+    // Check to see if updating the runner is needed
+    //////////////////////////////
     if (fs.existsSync(runner + 'file.js')) {
       runnerFile = fs.readFileSync(runner + 'file.js', 'utf8');
       runnerFile += '\n//////////////////////////////\n' +
           '// Begin Lint Tasks\n' +
           '//////////////////////////////\n';
 
-      if (runnerFile.indexOf('require(\'./tasks/lint\')') > -1) {
+      if (runnerFile.indexOf('require(\'./tasks/jslint\')') > -1) {
         taskExists = true;
       }
       else {
-        runnerFile += 'require(\'./tasks/lint\')';
+        runnerFile += 'require(\'./tasks/jslint\')';
       }
     }
-
-
-
 
     //////////////////////////////
     // Add JSHint
@@ -94,7 +105,7 @@ var NorthGenerator = yeoman.generators.Base.extend({
       //////////////////////////////
       // Update Runner, if needed
       //////////////////////////////
-      this.copy('lint--' + runner.toLowerCase() + '.js', 'tasks/lint.js');
+      this.copy('lint--' + runner.toLowerCase() + '.js', 'tasks/jslint.js');
       if (!taskExists) {
         runnerFile += '(' + runner.toLowerCase() + ');\n';
         fs.outputFileSync(runner + 'file.js', runnerFile);
@@ -110,46 +121,39 @@ var NorthGenerator = yeoman.generators.Base.extend({
       //////////////////////////////
       // Update Package file, if needed
       //////////////////////////////
-      if (this.pkg && this.pkg.devDependencies) {
-        deps = this.pkg.devDependencies;
-        depKeys = Object.keys(deps);
+      deps = this.pkg.devDependencies;
+      depKeys = Object.keys(deps);
 
-        if (depKeys.indexOf('jshint-stylish') === -1) {
-          deps['jshint-stylish'] = '^0.4';
-          pkgUpdate = true;
-        }
-
-        if (depKeys.indexOf('gulp-jshint') === -1) {
-          deps['gulp-jshint'] = '^1.8';
-          pkgUpdate = true;
-        }
-
-        if (depKeys.indexOf('compass-options') === -1) {
-          deps['compass-options'] = '^0.1';
-          pkgUpdate = true;
-        }
-
-        if (depKeys.indexOf('browser-sync') === -1) {
-          deps['browser-sync'] = '^1.4';
-          pkgUpdate = true;
-        }
-
-        // if (!runnerExists) {
-        //   this.log(chalk.green('   create ') + runner + 'file.js');
-        // }
-        // else {
-        //   this.log(chalk.yellow('   update ') + runner + 'file.js');
-        // }
-
-        if (pkgUpdate) {
-          this.pkg.devDependencies = deps;
-          fs.outputJsonSync('package.json', this.pkg);
-
-          this.log(chalk.yellow('   update ') + 'package.js');
-        }
-
+      if (depKeys.indexOf('jshint-stylish') === -1) {
+        deps['jshint-stylish'] = '^0.4';
+        pkgUpdate = true;
       }
-      else {
+
+      if (depKeys.indexOf('gulp-jshint') === -1) {
+        deps['gulp-jshint'] = '^1.8';
+        pkgUpdate = true;
+      }
+
+      if (depKeys.indexOf('compass-options') === -1) {
+        deps['compass-options'] = '^0.1';
+        pkgUpdate = true;
+      }
+
+      if (depKeys.indexOf('browser-sync') === -1) {
+        deps['browser-sync'] = '^1.4';
+        pkgUpdate = true;
+      }
+
+      if (pkgUpdate) {
+        this.pkg.devDependencies = deps;
+        fs.outputJsonSync('package.json', this.pkg);
+
+        if (!pkgExists) {
+          this.log(chalk.green('   create ') + 'package.json');
+        }
+        else {
+          this.log(chalk.yellow('   update ') + 'package.json');
+        }
 
       }
     }

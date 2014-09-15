@@ -27,7 +27,7 @@
   ],
   "dependencies": {
     "chalk": "~0.4.0",
-    "execSync": "~1.0.1-pre",
+    "execSync": "^1.0.2",
     "fs-extra": "^0.10.0",
     "inquirer": "^0.4.1",
     "lodash": "~1.3.1",

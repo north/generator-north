@@ -132,3 +132,25 @@ module.exports.patterns = function (rootDir) {
   }
   return dirs;
 }
+
+module.exports.pkg = function (runner) {
+  var pkg = {
+    'name': 'project',
+    'version': '0.0.0',
+    'dependencies': {},
+    'devDependencies': {
+      'compass-options': '^0.1'
+    }
+  };
+
+  if (runner.toLowerCase() === 'grunt') {
+    pkg.devDependencies.grunt = '^0.4';
+    pkg.devDependencies.matchdep = '^0.3';
+  }
+  else if (runner.toLowerCase() === 'gulp') {
+    pkg.devDependencies.gulp = '^3.6';
+    pkg.devDependencies['gulp-css-target'] = '^0.1';
+  }
+
+  return pkg;
+}

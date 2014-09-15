@@ -1,8 +1,6 @@
 'use strict';
 
 var gulp = require('gulp');
-var jshint = require('gulp-jshint');
-var stylish = require('jshint-stylish');
 var paths = require('compass-options').paths();<% if (server) { %>
 var browserSync = require('browser-sync');
 var shell = require('gulp-shell');<% } %>
@@ -10,14 +8,7 @@ var shell = require('gulp-shell');<% } %>
 //////////////////////////////
 // Begin Gulp Tasks
 //////////////////////////////
-gulp.task('lint', function () {
-  return gulp.src([
-      paths.js + '/**/*.js',
-      '!' + paths.js + '/**/*.js'
-    ])
-    .pipe(jshint())
-    .pipe(jshint.reporter(stylish))
-});
+require('./tasks/jslint')(gulp);
 <% if (server) { %>
 //////////////////////////////
 // Compass Task
@@ -33,7 +24,7 @@ gulp.task('compass', function () {
 // Watch
 //////////////////////////////
 gulp.task('watch', function () {
-  gulp.watch(paths.js + '/**/*.js', ['lint']);
+  gulp.watch(paths.js + '/**/*.js', ['jslint']);
 });
 
 //////////////////////////////

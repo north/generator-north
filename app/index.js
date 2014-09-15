@@ -6,6 +6,7 @@ var chalk = require('chalk');
 var _s = require('underscore.string');
 var sh = require('execSync');
 var shared = require('../shared.js');
+var settings = {};
 
 
 var NorthGenerator = yeoman.generators.Base.extend({
@@ -15,13 +16,6 @@ var NorthGenerator = yeoman.generators.Base.extend({
 
 
     this.on('end', function () {
-      //////////////////////////////
-      // If the --init flag isn't passed in, move into project dir
-      //////////////////////////////
-      if (!this.options['init']) {
-        process.chdir(this.folder);
-      }
-
       //////////////////////////////
       // Install dependencies unless --skip-install is passed
       //////////////////////////////
@@ -78,8 +72,8 @@ var NorthGenerator = yeoman.generators.Base.extend({
         type: 'list',
         name: 'projectRunner',
         message: 'What task runner would you like to use?',
-        choices: ['Grunt', 'Gulp', 'None'],
-        default: 'Grunt'
+        choices: ['Gulp', 'None'],
+        default: 'Gulp'
       },
       {
         type: 'confirm',
@@ -109,44 +103,68 @@ var NorthGenerator = yeoman.generators.Base.extend({
     }.bind(this));
   },
 
+  enforceFolderName: function () {
+    this.destinationRoot(this.folder);
+  },
+
+  saveSettings: function () {
+    settings = {
+      project: this.projectName,
+      slug: this.slug,
+      runner: this.runner,
+      server: this.server,
+      folder: this.folder,
+      git: this.git
+    };
+
+    this.config.set(settings);
+  },
+
   app: function () {
-    this.template('_bower.json', this.folder + 'bower.json');
-    this.copy('Gemfile', this.folder + 'Gemfile');
+    this.template('_bower.json', 'bower.json');
+    this.copy('Gemfile', 'Gemfile');
   },
 
   projectfiles: function () {
-    this.copy('editorconfig', this.folder + '.editorconfig');
-    this.copy('jshintrc', this.folder + '.jshintrc');
-    this.copy('gitignore', this.folder + '.gitignore');
-    this.copy('config.rb', this.folder + 'config.rb');
+    var pkg = shared.pkg(this.runner);
+        pkg.name = this.slug;
 
-    if (this.runner === 'Grunt') {
-      this.copy('Gruntfile.js', this.folder + 'Gruntfile.js');
-      this.template('_package-grunt.json', this.folder + 'package.json');
+    if (this.server) {
+      pkg.devDependencies['gulp-shell'] = '^0.2';
     }
-    else if (this.runner === 'Gulp') {
-      this.copy('Gulpfile.js', this.folder + 'Gulpfile.js');
-      this.template('_package-gulp.json', this.folder + 'package.json');
+
+    this.copy('editorconfig', '.editorconfig');
+    this.copy('gitignore', '.gitignore');
+    this.copy('config.rb', 'config.rb');
+
+    if (this.runner === 'Gulp') {
+      this.copy('Gulpfile.js', 'Gulpfile.js');
+      this.write('package.json', JSON.stringify(pkg));
     }
 
     if (this.server) {
-      this.template('index.html', this.folder + 'index.html');
+      this.template('index.html', 'index.html');
     }
 
-    this.template('_style.scss', this.folder + 'sass/style.scss');
+    this.template('_style.scss', 'sass/style.scss');
 
     var globals = ['variables', 'functions', 'mixins', 'extends'];
 
     for (var i in globals) {
-      this.copy('all.scss', this.folder + 'sass/partials/global/_' + globals[i] + '.scss');
-      this.copy('gitkeep', this.folder + 'sass/partials/global/' + globals[i] + '/.gitkeep');
+      this.copy('all.scss', 'sass/partials/global/_' + globals[i] + '.scss');
+      this.copy('gitkeep', 'sass/partials/global/' + globals[i] + '/.gitkeep');
     }
 
     var keep = ['sass', 'images', 'fonts', 'js', 'sass/partials', 'sass/partials/components', 'sass/partials/layouts'];
 
     for (var i in keep) {
-      this.copy('gitkeep', this.folder + keep[i] + '/.gitkeep');
+      this.copy('gitkeep', keep[i] + '/.gitkeep');
     }
+  },
+
+  invokes: function () {
+    // Lint
+    this.invoke('north:jslint');
   }
 });
 
