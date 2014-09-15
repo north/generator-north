@@ -8,7 +8,7 @@ var shell = require('gulp-shell');<% } %>
 //////////////////////////////
 // Begin Gulp Tasks
 //////////////////////////////
-require('./tasks/jslint')(gulp);
+require('./tasks/jshint')(gulp);
 <% if (server) { %>
 //////////////////////////////
 // Compass Task
@@ -24,7 +24,7 @@ gulp.task('compass', function () {
 // Watch
 //////////////////////////////
 gulp.task('watch', function () {
-  gulp.watch(paths.js + '/**/*.js', ['jslint']);
+  gulp.watch(paths.js + '/**/*.js', ['jshint']);
 });
 
 //////////////////////////////

@@ -18,7 +18,7 @@ var toLint = [
 ];
 
 module.exports = function (gulp, lintPaths) {
-  gulp.task('jslint', function () {
+  gulp.task('jshint', function () {
     lintPaths = lintPaths || toLint;
 
     return gulp.src(lintPaths)

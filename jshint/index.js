@@ -8,14 +8,33 @@ var util = require('util'),
 
 var NorthGenerator = yeoman.generators.Base.extend({
   init: function () {
+    var config,
+        i;
+
     if (fs.existsSync('package.json')) {
       this.pkg = fs.readJsonSync('package.json');
     }
+
+    if (this.config.get('runner')) {
+      this.runner = this.config.get('runner');
+    }
+    else {
+      if (fs.existsSync('.yo-rc.json')) {
+        config = fs.readJsonSync('.yo-rc.json');
+        for (var i in config) {
+          if (config[i].runner) {
+            this.runner = config[i].runner;
+            break;
+          }
+        }
+      }
+    }
+
   },
 
   prompts: function () {
     var done = this.async(),
-        runner = this.config.get('runner'),
+        runner = this.runner,
         prompts = [];
 
     if (!runner) {
@@ -38,7 +57,7 @@ var NorthGenerator = yeoman.generators.Base.extend({
   },
 
   build: function () {
-    var runner = this.config.get('runner'),
+    var runner = this.runner,
         taskExists = false,
         runnerExists = true,
         pkgExists = true,
@@ -85,11 +104,11 @@ var NorthGenerator = yeoman.generators.Base.extend({
           '// Begin Lint Tasks\n' +
           '//////////////////////////////\n';
 
-      if (runnerFile.indexOf('require(\'./tasks/jslint\')') > -1) {
+      if (runnerFile.indexOf('require(\'./tasks/jshint\')') > -1) {
         taskExists = true;
       }
       else {
-        runnerFile += 'require(\'./tasks/jslint\')';
+        runnerFile += 'require(\'./tasks/jshint\')';
       }
     }
 
@@ -105,7 +124,7 @@ var NorthGenerator = yeoman.generators.Base.extend({
       //////////////////////////////
       // Update Runner, if needed
       //////////////////////////////
-      this.copy('lint--' + runner.toLowerCase() + '.js', 'tasks/jslint.js');
+      this.copy('lint--' + runner.toLowerCase() + '.js', 'tasks/jshint.js');
       if (!taskExists) {
         runnerFile += '(' + runner.toLowerCase() + ');\n';
         fs.outputFileSync(runner + 'file.js', runnerFile);
