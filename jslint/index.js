@@ -23,7 +23,7 @@ var NorthGenerator = yeoman.generators.Base.extend({
         type: 'list',
         name: 'projectRunner',
         message: 'What task runner would you like to use?',
-        choices: ['Grunt', 'Gulp', 'None'],
+        choices: ['Gulp', 'None'],
         default: 'Gulp'
       });
 
