@@ -21,7 +21,7 @@ var NorthGenerator = yeoman.generators.Base.extend({
       'partials/layouts'
     ];
 
-    this.invoke('sass:structure', {
+    this.composeWith('sass:structure', {
       options: {
         syntax: 'scss',
         base: 'sass',

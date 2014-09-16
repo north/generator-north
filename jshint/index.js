@@ -16,7 +16,7 @@ var NorthGenerator = yeoman.generators.Base.extend({
     if (this.config.get('runner')) {
       this.runner = this.config.get('runner');
     }
-    else if (this.options.runner) {
+    if (this.options.runner) {
       this.runner = this.options.runner;
     }
   },

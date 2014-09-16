@@ -155,9 +155,13 @@ var NorthGenerator = yeoman.generators.Base.extend({
 
   invokes: function () {
     // Lint
-    this.invoke('north:jshint');
+    this.composeWith('north:jshint', {
+      options: {
+        runner: 'None'
+      }
+    });
     // Sass Structure
-    this.invoke('north:sass');
+    this.composeWith('north:sass');
   }
 });
 
