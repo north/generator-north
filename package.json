@@ -21,7 +21,8 @@
     "component",
     "layout",
     "jshint",
-    "shared.js"
+    "shared.js",
+    "sass"
   ],
   "keywords": [
     "yeoman-generator"
@@ -40,6 +41,7 @@
     "mocha": "*"
   },
   "peerDependencies": {
-    "yo": ">=1.0.0"
+    "yo": ">=1.0.0",
+    "generator-sass": "<1.0.0"
   }
 }

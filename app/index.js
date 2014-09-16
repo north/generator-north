@@ -146,16 +146,7 @@ var NorthGenerator = yeoman.generators.Base.extend({
       this.template('index.html', 'index.html');
     }
 
-    this.template('_style.scss', 'sass/style.scss');
-
-    var globals = ['variables', 'functions', 'mixins', 'extends'];
-
-    for (var i in globals) {
-      this.copy('all.scss', 'sass/partials/global/_' + globals[i] + '.scss');
-      this.copy('gitkeep', 'sass/partials/global/' + globals[i] + '/.gitkeep');
-    }
-
-    var keep = ['sass', 'images', 'fonts', 'js', 'sass/partials', 'sass/partials/components', 'sass/partials/layouts'];
+    var keep = ['images', 'fonts', 'js'];
 
     for (var i in keep) {
       this.copy('gitkeep', keep[i] + '/.gitkeep');
@@ -164,7 +155,9 @@ var NorthGenerator = yeoman.generators.Base.extend({
 
   invokes: function () {
     // Lint
-    this.invoke('north:jslint');
+    this.invoke('north:jshint');
+    // Sass Structure
+    this.invoke('north:sass');
   }
 });
 
