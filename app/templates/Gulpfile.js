@@ -69,3 +69,8 @@ gulp.task('browserSync', function () {
 gulp.task('server', ['watch', 'compass', 'browserSync']);
 gulp.task('serve', ['server']);
 <% } %>
+
+//////////////////////////////
+// Default Task
+//////////////////////////////
+gulp.task('default', [<% if (!server) { %>'jshint'<% } else { %>'server'<% } %>]);
