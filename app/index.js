@@ -7,6 +7,7 @@ var _s = require('underscore.string');
 var fs = require('fs-extra');
 var shared = require('../shared.js');
 var settings = {};
+var sh = require('execSync');
 
 
 var NorthGenerator = yeoman.generators.Base.extend({
