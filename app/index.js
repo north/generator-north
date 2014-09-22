@@ -122,11 +122,16 @@ var NorthGenerator = yeoman.generators.Base.extend({
         runner: this.runner,
         server: this.server,
         'no-gemfile': true,
-        'no-package': true
+        'no-package': true,
+        'skip-install': this.options['skip-install']
       }
     });
     // Sass Structure
-    this.composeWith('north:sass');
+    this.composeWith('north:sass', {
+      options: {
+        'skip-install': this.options['skip-install']
+      }
+    });
   },
 
   writing: function () {

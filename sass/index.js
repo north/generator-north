@@ -63,7 +63,8 @@ var NorthGenerator = yeoman.generators.Base.extend({
         lineComments: false,
         sassOptions: {
           ':sourcemaps': true
-        }
+        },
+        'skip-install': this.options['skip-install']
       }
     });
   }
