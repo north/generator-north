@@ -133,13 +133,14 @@ module.exports.patterns = function (rootDir) {
   return dirs;
 }
 
-module.exports.pkg = function (runner) {
+module.exports.pkg = function (runner, server) {
   var pkg = {
     'name': 'project',
     'version': '0.0.0',
     'dependencies': {},
     'devDependencies': {
-      'compass-options': '^0.1'
+      'compass-options': '^0.1',
+      'browser-sync': '^1.3'
     }
   };
 
@@ -150,6 +151,8 @@ module.exports.pkg = function (runner) {
   else if (runner.toLowerCase() === 'gulp') {
     pkg.devDependencies.gulp = '^3.6';
     pkg.devDependencies['gulp-css-target'] = '^0.1';
+    pkg.devDependencies['jshint-stylish'] =  '^0.4';
+    pkg.devDependencies['gulp-jshint'] = '^1.8';
   }
 
   return pkg;

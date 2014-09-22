@@ -7,7 +7,7 @@ var util = require('util'),
 
 
 var NorthGenerator = yeoman.generators.Base.extend({
-  init: function () {
+  initializing: function () {
     if (fs.existsSync('package.json')) {
       this.pkg = fs.readJsonSync('package.json');
     }
@@ -19,9 +19,17 @@ var NorthGenerator = yeoman.generators.Base.extend({
     if (this.options.runner) {
       this.runner = this.options.runner;
     }
+
+    if (this.options['no-gemfile']) {
+      this['no-gemfile'] = this.options['no-gemfile'];
+    }
+
+    if (this.options['no-package']) {
+      this['no-package'] = this.options['no-package'];
+    }
   },
 
-  prompts: function () {
+  prompting: function () {
     var done = this.async(),
         runner = this.runner,
         prompts = [];
@@ -46,34 +54,26 @@ var NorthGenerator = yeoman.generators.Base.extend({
     }
   },
 
-  build: function () {
+  configuring: function () {
+    //////////////////////////////
+    // Runner and Runner Exists
+    //////////////////////////////
     var runner = this.runner,
-        taskExists = false,
         runnerExists = true,
         pkgExists = true,
         pkgUpdate = false,
-        pkgFile,
         deps,
-        depKeys,
-        runnerFile;
+        depKeys;
 
-    // If runner is none, it's false
     if (runner.toLowerCase() === 'none') {
       runner = false;
     }
-
-    //////////////////////////////
-    // Check to see if runner file exists, and if it doesn't create it
-    //////////////////////////////
     if (runner && !fs.existsSync(runner + 'file.js')) {
       runnerExists = false;
-
-      runnerFile = '\'use strict\';\n\n' +
-        'var gulp = require(\'gulp\'),\n' +
-        '    paths = require(\'compass-options\').paths();\n';
-
-      fs.outputFileSync(runner + 'file.js', runnerFile);
     }
+
+    this.runner = runner;
+    this.runnerExists = runnerExists;
 
     //////////////////////////////
     // Check to see if package exists, and if it doesn't create it
@@ -82,51 +82,14 @@ var NorthGenerator = yeoman.generators.Base.extend({
       pkgExists = false;
       this.pkg = shared.pkg(runner);
 
-      fs.outputJsonSync('package.json', this.pkg);
-    }
-
-    //////////////////////////////
-    // Check to see if updating the runner is needed
-    //////////////////////////////
-    if (fs.existsSync(runner + 'file.js')) {
-      runnerFile = fs.readFileSync(runner + 'file.js', 'utf8');
-      runnerFile += '\n//////////////////////////////\n' +
-          '// Begin Lint Tasks\n' +
-          '//////////////////////////////\n';
-
-      if (runnerFile.indexOf('require(\'./tasks/jshint\')') > -1) {
-        taskExists = true;
-      }
-      else {
-        runnerFile += 'require(\'./tasks/jshint\')';
+      if (this['no-package'] !== true) {
+        fs.outputJsonSync('package.json', this.pkg);
       }
     }
 
-    //////////////////////////////
-    // Add JSHint
-    //////////////////////////////
-    this.copy('jshintrc', '.jshintrc');
+    this.pkgExists = pkgExists;
 
-    //////////////////////////////
-    // Only run the runner stuff if runner !== none
-    //////////////////////////////
     if (runner) {
-      //////////////////////////////
-      // Update Runner, if needed
-      //////////////////////////////
-      this.copy('lint--' + runner.toLowerCase() + '.js', 'tasks/jshint.js');
-      if (!taskExists) {
-        runnerFile += '(' + runner.toLowerCase() + ');\n';
-        fs.outputFileSync(runner + 'file.js', runnerFile);
-        if (!runnerExists) {
-          this.log(chalk.green('   create ') + runner + 'file.js');
-        }
-        else {
-          this.log(chalk.yellow('   update ') + runner + 'file.js');
-        }
-
-      }
-
       //////////////////////////////
       // Update Package file, if needed
       //////////////////////////////
@@ -149,8 +112,12 @@ var NorthGenerator = yeoman.generators.Base.extend({
       }
 
       if (depKeys.indexOf('browser-sync') === -1) {
-        deps['browser-sync'] = '^1.4';
+        deps['browser-sync'] = '^1.3';
         pkgUpdate = true;
+      }
+
+      if (this['no-package'] === true) {
+        pkgUpdate = false;
       }
 
       if (pkgUpdate) {
@@ -165,6 +132,88 @@ var NorthGenerator = yeoman.generators.Base.extend({
         }
 
       }
+    }
+
+    //////////////////////////////
+    // Add JSHint
+    //////////////////////////////
+    this.copy('jshintrc', '.jshintrc');
+  },
+
+  writing: function () {
+    var runner = this.runner,
+        taskExists = false,
+        runnerExists = true,
+        pkgFile,
+        deps,
+        depKeys,
+        runnerFile;
+
+    //////////////////////////////
+    // Check to see if runner file exists, and if it doesn't create it
+    //////////////////////////////
+    if (this.runner && !this.runnerExists) {
+
+      runnerFile = '\'use strict\';\n\n' +
+        'var gulp = require(\'gulp\'),\n' +
+        '    paths = require(\'compass-options\').paths();\n';
+
+      if (this['no-gemfile'] !== true) {
+        fs.outputFileSync(runner + 'file.js', runnerFile);
+      }
+
+
+    }
+
+    //////////////////////////////
+    // Check to see if updating the runner is needed
+    //////////////////////////////
+    if (fs.existsSync(runner + 'file.js')) {
+      runnerFile = fs.readFileSync(runner + 'file.js', 'utf8');
+      runnerFile += '\n//////////////////////////////\n' +
+          '// Begin Lint Tasks\n' +
+          '//////////////////////////////\n';
+
+      if (runnerFile.indexOf('require(\'./tasks/jshint\')') > -1) {
+        taskExists = true;
+      }
+      else {
+        runnerFile += 'require(\'./tasks/jshint\')';
+      }
+    }
+
+    if (this['no-gemfile'] === true) {
+      taskExists = true;
+    }
+
+    //////////////////////////////
+    // Only run the runner stuff if runner !== none
+    //////////////////////////////
+    if (runner) {
+      //////////////////////////////
+      // Update Runner, if needed
+      //////////////////////////////
+      this.copy('lint--' + runner.toLowerCase() + '.js', 'tasks/jshint.js');
+      if (!taskExists) {
+        runnerFile += '(' + runner.toLowerCase() + ');\n';
+        fs.outputFileSync(runner + 'file.js', runnerFile);
+        if (!runnerExists) {
+          this.log(chalk.green('   create ') + runner + 'file.js');
+        }
+        else {
+          this.log(chalk.yellow('   update ') + runner + 'file.js');
+        }
+
+      }
+    }
+  },
+
+  install: function () {
+    if (!this.options['skip-install']) {
+      this.installDependencies({
+        bower: false,
+        npm: true
+      });
     }
   }
 });

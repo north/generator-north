@@ -4,46 +4,17 @@ var path = require('path');
 var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var _s = require('underscore.string');
-var sh = require('execSync');
+var fs = require('fs-extra');
 var shared = require('../shared.js');
 var settings = {};
 
 
 var NorthGenerator = yeoman.generators.Base.extend({
-  init: function () {
+  initializing: function () {
     this.pkg = require('../package.json');
-
-
-
-    this.on('end', function () {
-      //////////////////////////////
-      // Install dependencies unless --skip-install is passed
-      //////////////////////////////
-      if (!this.options['skip-install']) {
-        var bower = true;
-        var npm = this.runner.indexOf('None') !== -1 ? false : true;
-
-        sh.run('bundle install --path vendor');
-
-        if (bower || npm) {
-          this.installDependencies({
-            bower: bower,
-            npm: npm
-          });
-        }
-      }
-
-      //////////////////////////////
-      // If the --git flag is passed, initialize git and add for initial commit
-      //////////////////////////////
-      if (this.options['git']) {
-        sh.run('git init');
-        sh.run('git add . && git commit -m "North Generation"');
-      }
-    });
   },
 
-  askFor: function () {
+  prompting: function () {
     var done = this.async();
 
     var welcome = shared.welcome();
@@ -103,11 +74,15 @@ var NorthGenerator = yeoman.generators.Base.extend({
     }.bind(this));
   },
 
-  enforceFolderName: function () {
+  configuring: function () {
+    //////////////////////////////
+    // Folder Enforcement
+    //////////////////////////////
     this.destinationRoot(this.folder);
-  },
 
-  saveSettings: function () {
+    //////////////////////////////
+    // Settings
+    //////////////////////////////
     settings = {
       project: this.projectName,
       slug: this.slug,
@@ -118,14 +93,10 @@ var NorthGenerator = yeoman.generators.Base.extend({
     };
 
     this.config.set(settings);
-  },
 
-  app: function () {
-    this.template('_bower.json', 'bower.json');
-    this.copy('Gemfile', 'Gemfile');
-  },
-
-  projectfiles: function () {
+    //////////////////////////////
+    // File Config
+    //////////////////////////////
     var pkg = shared.pkg(this.runner);
         pkg.name = this.slug;
 
@@ -135,33 +106,65 @@ var NorthGenerator = yeoman.generators.Base.extend({
 
     this.copy('editorconfig', '.editorconfig');
     this.copy('gitignore', '.gitignore');
-    this.copy('config.rb', 'config.rb');
+    this.template('_bower.json', 'bower.json');
+
+
 
     if (this.runner === 'Gulp') {
-      this.copy('Gulpfile.js', 'Gulpfile.js');
       this.write('package.json', JSON.stringify(pkg));
-    }
-
-    if (this.server) {
-      this.template('index.html', 'index.html');
-    }
-
-    var keep = ['images', 'fonts', 'js'];
-
-    for (var i in keep) {
-      this.copy('gitkeep', keep[i] + '/.gitkeep');
     }
   },
 
-  invokes: function () {
+  default: function () {
     // Lint
     this.composeWith('north:jshint', {
       options: {
-        runner: 'None'
+        runner: this.runner,
+        server: this.server,
+        'no-gemfile': true,
+        'no-package': true
       }
     });
     // Sass Structure
     this.composeWith('north:sass');
+  },
+
+  writing: function () {
+    if (this.runner === 'Gulp') {
+      this.copy('Gulpfile.js', 'Gulpfile.js');
+    }
+
+    if (this.server) {
+      this.template('index.html', 'index.html');
+      this.directory('tasks', 'tasks');
+    }
+  },
+
+  install: function () {
+    //////////////////////////////
+    // Install dependencies unless --skip-install is passed
+    //////////////////////////////
+    if (!this.options['skip-install']) {
+      var bower = true;
+      var npm = this.runner.indexOf('None') !== -1 ? false : true;
+
+      if (bower || npm) {
+        this.installDependencies({
+          bower: bower,
+          npm: npm
+        });
+      }
+    }
+  },
+
+  end: function () {
+    //////////////////////////////
+    // If the --git flag is passed, initialize git and add for initial commit
+    //////////////////////////////
+    if (this.options['git']) {
+      sh.run('git init');
+      sh.run('git add . && git commit -m "North Generation"');
+    }
   }
 });
 

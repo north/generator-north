@@ -9,7 +9,7 @@ $browser-minimum-versions: (
   "chrome": "37",
   "safari": "7",
   "firefox": "30",
-  "ios-safari": "7"
+  "ios-safari": "8"
 );
 ////////////////////////////
 
@@ -26,7 +26,6 @@ $browser-minimum-versions: (
 @import "breakpoint";
 @import "singularitygs";
 @import "modular-scale";
-@import "color-schemer";
 ////////////////////////
 
 //////////////////////////////
